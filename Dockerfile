@@ -22,6 +22,7 @@ COPY conf/run.sh /
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get install -y mailman exim4 apache2 \
+    && apt-get clean \
     && chmod +x /run.sh
 
 COPY conf/00_local_macros /etc/exim4/conf.d/main/

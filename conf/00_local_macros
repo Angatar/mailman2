@@ -5,8 +5,6 @@ DKIM_PRIVATE_KEY = /etc/exim4/tls.d/private.pem
 smtp_banner = lists.example.com
 REMOTE_SMTP_HELO_DATA = lists.example.com
 MAIN_TLS_ENABLE = true
-
 REMOTE_SMTP_SMARTHOST_HOSTS_REQUIRE_TLS = *
 TLS_ON_CONNECT_PORTS = 465
 #CHECK_RCPT_SPF = true
-
