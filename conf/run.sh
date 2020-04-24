@@ -42,7 +42,7 @@ fi
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" /etc/exim4/conf.d/main/04_mailman_options
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" /etc/exim4/update-exim4.conf.conf
 /bin/sed -i "s/lists\.example\.com/${URL_HOST}/" /etc/apache2/sites-available/mailman.conf
-/bin/sed -i "s/URL_ROOT\//${URL_ROOT}/" /etc/apache2/sites-available/mailman.conf
+/bin/sed -i "s/URL_ROOT\//${URL_ROOT//\//\\/}/" /etc/apache2/sites-available/mailman.conf
 
 #/bin/sed -i "s/DEFAULT_EMAIL_HOST.*\=.*/DEFAULT_EMAIL_HOST\ \=\ \'${EMAIL_HOST}\'/" $mailmancfg
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" $mailmancfg
