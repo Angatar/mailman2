@@ -5,7 +5,6 @@
 echo "root: ${LIST_ADMIN}" > /etc/email-addresses
 /bin/sed -i "s/admin@example\.com/${LIST_ADMIN}/" /etc/aliases
 
-
 #declare Hostname in hostname and mailname files
 echo "${EMAIL_HOST}" > /etc/hostname 
 echo ${EMAIL_HOST} > /etc/mailname
@@ -59,9 +58,7 @@ echo -n "Setting up Mailman..."
        mkdir /var/run/mailman
        chown list:list /var/run/mailman/
        ln -s /var/lib/mailman/bin/mailmanctl /etc/init.d/mailman
-
 }
-
 
 
 echo -n "Initializing mailing lists..."
@@ -70,24 +67,8 @@ echo -n "Initializing mailing lists..."
 	/usr/sbin/newlist -q -l ${LIST_LANGUAGE_CODE} mailman ${LIST_ADMIN} ${MASTER_PASSWORD}
 }
 
-# Addaliases and update them:
-#cat << EOA >> /etc/aliases
-#mailman:              "|/var/lib/mailman/mail/mailman post mailman"
-#mailman-admin:        "|/var/lib/mailman/mail/mailman admin mailman"
-#mailman-bounces:      "|/var/lib/mailman/mail/mailman bounces mailman"
-#mailman-confirm:      "|/var/lib/mailman/mail/mailman confirm mailman"
-#mailman-join:         "|/var/lib/mailman/mail/mailman join mailman"
-#mailman-leave:        "|/var/lib/mailman/mail/mailman leave mailman"
-#mailman-owner:        "|/var/lib/mailman/mail/mailman owner mailman"
-#mailman-request:      "|/var/lib/mailman/mail/mailman request mailman"
-#mailman-subscribe:    "|/var/lib/mailman/mail/mailman subscribe mailman"
-#mailman-unsubscribe:  "|/var/lib/mailman/mail/mailman unsubscribe mailman"
-#EOA
-#/usr/bin/newaliases
-
 #update aliases
 /usr/bin/newaliases
-
 
 
 echo -n "Setting up Apache web server..."
