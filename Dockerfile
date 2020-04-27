@@ -9,14 +9,8 @@ ENV EMAIL_HOST lists.example.com
 ENV MASTER_PASSWORD example
 ENV LIST_ADMIN admin@lists.example.com
 ENV LIST_LANGUAGE_CODE en
-## if you are not behind a loadbalancer or if you can get the 
-## origin IP it might be useful to enable SPF to avoid identity usurpation
 ENV ENABLE_SPF "false"
-## Add a root dir to mailman so that it is not obvious for bots,
-## don't forget the trailling slash or let empty if root has to be "/"
 ENV URL_ROOT lists/
-## Possible values for URL_PATTERN are http and https 
-##... might be usefull with an ingress and letsencrypt certmanager for example
 ENV URL_PATTERN http 
 
 COPY conf/run.sh /
