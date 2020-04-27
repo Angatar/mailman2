@@ -28,7 +28,7 @@ else
 fi
 
 # enable spf check if requested
-if [ $ENABLE_SPF = true]; then
+if [ $ENABLE_SPF = "true"]; then
     echo "installing SPF tools before enabling"
     apt-get install -y spf-tools-perl 
 
