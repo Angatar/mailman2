@@ -3,6 +3,8 @@ A useful compact mailman2 + exim4 + apache container based on debian(10) buster-
 
 Debian buster is the latest Debian release that contains the so convenient mailman2. This container intends to provide a stable and easy way to deploy a mailing lists manager with mailman2 and exim4. 
 
+This container has tls enabled and configured and is DKIM ready (generated and configured DKIM keys). It is also ready to make use of https.
+
 ## Get this image (d3fk/mailman2)
 The best way to get this d3fk/mailman2 image is to pull the prebuilt image from the Docker Hub Registry.
 
@@ -57,7 +59,16 @@ The logs will display the deployment steps of the container and provide you in t
 
 In case you didn't yet configured your DNS for emails and web server, your web server is already reachable from http://localhost (welcome text) and if you let the URL_ROOT at its default value the mailman admin interface can be reached from (http://localhost/lists/admin/)
 
+The mailing lists cannot be used or created from a localhost since they require a valid domain name cofigured.
+
+
 ## DNS configuration
+4  records on your DNS are required to make mailman, exim4 and the web interfaces work properly (the 2 txt records are optional but good practice).
+- 1 A record for your domain or subdomain to declare your web interfaces that will allows to manage your mailing lists
+- 1 MX record to declare that your email server is authorised to send email for your domain name
+- 1 TXT record to declare your DKIM public key (the txt record including the public key is provided in the container logs)
+- 1 TXT record to define your server SPF check rules to avoid the usurpation of identity of your email server.
+
 comming soon ...
 
 ## Advanced configuration
