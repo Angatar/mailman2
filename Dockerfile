@@ -19,6 +19,7 @@ RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get install -y mailman exim4 apache2 \
     && apt-get clean \
+    && echo "ServerName $URL_HOST" >> /etc/apache2/apache2.conf \
     && chmod +x /run.sh
 
 COPY conf/00_local_macros /etc/exim4/conf.d/main/

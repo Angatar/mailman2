@@ -40,6 +40,7 @@ fi
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" /etc/exim4/conf.d/main/00_local_macros
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" /etc/exim4/conf.d/main/04_mailman_options
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" /etc/exim4/update-exim4.conf.conf
+/bin/sed -i "s/lists\.example\.com/${URL_HOST}/" /etc/apache2/apache2.conf
 /bin/sed -i "s/lists\.example\.com/${URL_HOST}/" /etc/apache2/sites-available/mailman.conf
 /bin/sed -i "s/URL_ROOT\//${URL_ROOT//\//\\/}/" /etc/apache2/sites-available/mailman.conf
 
@@ -79,9 +80,10 @@ echo -n "Setting up Apache web server..."
 # edit apache default security.conf for production        
         /bin/sed -i "s/ServerSignature On/ServerSignature Off/" /etc/apache2/conf-available/security.conf
         /bin/sed -i "s/ServerTokens OS/ServerTokens Prod/" /etc/apache2/conf-available/security.conf
+        echo "Apache2 new configuration is now activated, the service apache2 will be started at the end of deployment"
 }
 
-echo -n "Setting up RSA keys for DKIM..."
+echo "Setting up RSA keys for DKIM..."
 {
 	if [ ! -f /etc/exim4/tls.d/private.pem ]; then
 		mkdir -p /etc/exim4/tls.d
@@ -92,7 +94,7 @@ echo -n "Setting up RSA keys for DKIM..."
 
 key=$(sed -e '/^-/d' /etc/exim4/tls.d/public.pem|paste -sd '' -)
 
-echo -n "setting up cert for TLS"
+echo "setting up cert for TLS"
 {
         if [ ! -f /etc/exim4/exim.key ]; then
                 openssl req -x509 -sha256 -days 9000 -nodes -newkey rsa:4096 -keyout /etc/exim4/exim.key -out /etc/exim4/exim.crt -subj "/O=${EMAIL_HOST}/OU=IT Department/CN=${EMAIL_HOST}"
@@ -100,13 +102,13 @@ echo -n "setting up cert for TLS"
         fi
 }
 
-echo -n "Fixing exim4 permissions ..."
+echo "Fixing exim4 permissions ..."
 {
         chown -R Debian-exim:Debian-exim /etc/exim4
 }
 
 #build updated exim config file
-echo -n "Setting up Exim4..."
+echo  "Setting up Exim4..."
 {
 
         update-exim4.conf
@@ -115,7 +117,7 @@ echo -n "Setting up Exim4..."
 
 
 
-echo -n "Fixing mailman permissons ..."
+echo  "Fixing mailman permissons ..."
 {
 	/usr/lib/mailman/bin/check_perms -f > /dev/null
 }
@@ -124,8 +126,12 @@ echo -n "Starting up services..."
 {
 	/etc/init.d/exim4 start
 	/etc/init.d/mailman start
+echo " exim4 OK ... mailman OK ..."
 }
 
+echo '------------- Apache2 service is starting -------------'
+echo
+echo
 cat << EOB
 
     ***********************************************
