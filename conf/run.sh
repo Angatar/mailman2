@@ -29,7 +29,7 @@ fi
 
 # enable spf check if requested
 if [ $ENABLE_SPF = "true" ]; then
-    echo "installing SPF tools before enabling"
+    echo "installing SPF tools before enabling..."
     apt-get install -y spf-tools-perl 
 
     /bin/sed -i "s/#CHECK_RCPT_SPF/CHECK_RCPT_SPF/" /etc/exim4/conf.d/main/00_local_macros
@@ -43,8 +43,6 @@ fi
 /bin/sed -i "s/lists\.example\.com/${URL_HOST}/" /etc/apache2/apache2.conf
 /bin/sed -i "s/lists\.example\.com/${URL_HOST}/" /etc/apache2/sites-available/mailman.conf
 /bin/sed -i "s/URL_ROOT\//${URL_ROOT//\//\\/}/" /etc/apache2/sites-available/mailman.conf
-
-#/bin/sed -i "s/DEFAULT_EMAIL_HOST.*\=.*/DEFAULT_EMAIL_HOST\ \=\ \'${EMAIL_HOST}\'/" $mailmancfg
 /bin/sed -i "s/lists\.example\.com/${EMAIL_HOST}/" $mailmancfg
 /bin/sed -i "s/DEFAULT_URL_HOST.*\=.*/DEFAULT_URL_HOST\ \=\ \'${URL_HOST}\'/" $mailmancfg
 /bin/sed -i "s/DEFAULT_SERVER_LANGUAGE.*\=.*/DEFAULT_SERVER_LANGUAGE\ \=\ \'${LIST_LANGUAGE_CODE}\'/" $mailmancfg
@@ -52,7 +50,6 @@ fi
 
 echo -n "Setting up Mailman..."
 {
-#        debconf-set-selections /mailman-config.cfg
         dpkg-reconfigure mailman
 
 #      especialy for debian:buster
@@ -80,7 +77,8 @@ echo -n "Setting up Apache web server..."
 # edit apache default security.conf for production        
         /bin/sed -i "s/ServerSignature On/ServerSignature Off/" /etc/apache2/conf-available/security.conf
         /bin/sed -i "s/ServerTokens OS/ServerTokens Prod/" /etc/apache2/conf-available/security.conf
-        echo "Apache2 new configuration is now activated, the service apache2 will be started at the end of deployment"
+        echo "Apache2 new configuration is now activated"
+        echo "The service apache2 will be started at the end of this container deployment"
 }
 
 echo "Setting up RSA keys for DKIM..."
@@ -94,7 +92,7 @@ echo "Setting up RSA keys for DKIM..."
 
 key=$(sed -e '/^-/d' /etc/exim4/tls.d/public.pem|paste -sd '' -)
 
-echo "setting up cert for TLS"
+echo "setting up cert for TLS..."
 {
         if [ ! -f /etc/exim4/exim.key ]; then
                 openssl req -x509 -sha256 -days 9000 -nodes -newkey rsa:4096 -keyout /etc/exim4/exim.key -out /etc/exim4/exim.crt -subj "/O=${EMAIL_HOST}/OU=IT Department/CN=${EMAIL_HOST}"
@@ -102,7 +100,7 @@ echo "setting up cert for TLS"
         fi
 }
 
-echo "Fixing exim4 permissions ..."
+echo "Fixing exim4 permissions..."
 {
         chown -R Debian-exim:Debian-exim /etc/exim4
 }
