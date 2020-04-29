@@ -72,6 +72,13 @@ echo -n "Initializing mailing lists..."
 echo -n "Setting up Apache web server..."
 {
 	a2enmod cgi
+        if [ $SSL_FROM_CONTAINER = "true" ]; then 
+            if [ $SSL_AUTOSIGNED = "true" ]; then 
+                make-ssl-cert generate-default-snakeoil --force-overwrite
+                echo -n "self signed SSL certificate freshly regenerated..."
+            fi
+            a2enmod ssl
+        fi
         a2dissite 000-default
 	a2ensite mailman.conf
 # edit apache default security.conf for production        
