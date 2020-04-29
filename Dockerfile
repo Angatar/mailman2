@@ -41,6 +41,6 @@ VOLUME /var/lib/mailman/archives
 VOLUME /var/lib/mailman/lists
 VOLUME /etc/exim4/tls.d
 
-EXPOSE 25 465 587 80
+EXPOSE 25 465 587 80 443
 
 CMD ["/run.sh"]
