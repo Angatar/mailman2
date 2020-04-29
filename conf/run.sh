@@ -96,7 +96,7 @@ echo "setting up cert for TLS..."
 {
         if [ ! -f /etc/exim4/exim.key ]; then
                 openssl req -x509 -sha256 -days 9000 -nodes -newkey rsa:4096 -keyout /etc/exim4/exim.key -out /etc/exim4/exim.crt -subj "/O=${EMAIL_HOST}/OU=IT Department/CN=${EMAIL_HOST}"
-
+                echo "Cert for TLS now generated..."
         fi
 }
 
@@ -108,12 +108,8 @@ echo "Fixing exim4 permissions..."
 #build updated exim config file
 echo  "Setting up Exim4..."
 {
-
         update-exim4.conf
-
 }
-
-
 
 echo  "Fixing mailman permissons ..."
 {

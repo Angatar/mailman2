@@ -1,9 +1,9 @@
 # Lightweight (312Mb) useful mailman2 from buster-slim (Angatar> d3fk/mailman2)
-A useful compact mailman2 + exim4 + apache container based on debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
+A useful compact mailman2 + exim4 + apache2 container based on debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
 
 Debian buster is the latest Debian release that contains the so convenient mailman2. This container intends to provide a stable and easy way to deploy a mailing lists manager with mailman2 and exim4. 
 
-This container has tls enabled and configured and is DKIM ready (generated and configured DKIM keys). It is also ready to make use of https.
+This container has TLS enabled and configured and is also DKIM ready (generated and configured DKIM keys). It is also ready to make use of https.
 
 ## Get this image (d3fk/mailman2)
 The best way to get this d3fk/mailman2 image is to pull the prebuilt image from the Docker Hub Registry.
@@ -18,21 +18,20 @@ Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
  
 ### Image tag d3fk/mailman2:latest
 
-The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered regularly) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
+The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
 ### Image tag d3fk/mailman2:stable 
-In case you prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of this repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this repo).
+In case you prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of this repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this code repository on GitHub).
 
 image:tag **d3fk/mailman2:stable**
 ```sh
 $ docker pull d3fk/mailman2:stable
 ```
 
-
 ## ENVIRONMENT
 
-- `URL_HOST` - the subdomain.domain of the web server on which the mailman web interfaces will be made available:used for the URL
-- `EMAIL_HOST` - the email host name: the subdomain and/or domain that will be used by your lists
+- `URL_HOST` - the subdomain.domain of the web server on which the mailman web interfaces will be made available: used for the URL
+- `EMAIL_HOST` - the email host name: the subdomain and/or domain that will be used by your lists for their addresses
 - `MASTER_PASSWORD` - the master password of the mailing lists - default is set to "example"
 - `LIST_ADMIN` - the email address of the lists administrator - used to create the admin account 
 - `LIST_LANGUAGE_CODE` - default is set to english with the value: "en"
@@ -46,7 +45,7 @@ $ docker pull d3fk/mailman2:stable
 The following is just an example, you have to define your own environment variables according to your DNS configuration and your requirements: 
 
 ```sh
-$ docker run --rm -d -p 80:80 -p 25:25 --name mailman -e URL_HOST=lists.example.com -e EMAIL_HOST=mails.example.com  -e LIST_ADMIN=youremail@example.com  d3fk/mailman2
+$ docker run --rm -d -p 80:80 -p 25:25 --name mailman -e URL_HOST=lists.example.com -e EMAIL_HOST=mails.example.com  -e LIST_ADMIN=youremail@example.com -e MASTER_PASSWORD="example" d3fk/mailman2
 ```
 
 Then visit the logs of the mailman container you have created:
@@ -57,31 +56,34 @@ $ docker logs mailman
 
 The logs will display the deployment steps of the container and provide you in the end with a valid DKIM public key value and the DKIM txt record that can be added to your DNS records to enable DKIM check for your mailman mailing list server.
 
-In case you didn't yet configured your DNS for emails and web server, your web server is already reachable from http://localhost (welcome text) and if you let the URL_ROOT at its default value the mailman admin interface can be reached from (http://localhost/lists/admin/)
+In case you didn't yet configured your DNS for emails and web server, your web server is already reachable from http://localhost (welcome text) and if you let the URL_ROOT at its default value ("lists/") the mailman admin interface can be reached from (http://localhost/lists/admin/)
 
-The mailing lists cannot be used or created from a localhost since they require a valid domain name cofigured.
+The mailing lists cannot be used or created from your localhost since they require a valid EMAIL_HOST name to be configured. For details on DNS configuration see the following section...
 
 
 ## DNS configuration
-4  records on your DNS are required to make mailman, exim4 and the web interfaces work properly (the 2 txt records are optional but good practice).
-- 1 A record for your domain or subdomain to declare your web interfaces that will allows to manage your mailing lists
-- 1 MX record to declare that your email server is authorised to send email for your domain name
+Several records on your DNS are required to make mailman, exim4 and the web interfaces work properly (the txt records are optional but good practice).
+- 1 A record for your domain or subdomain to declare your web interfaces that will allows to manage your mailing lists. This record has to correpond to your URL_HOST and has to point to the IP of the server running this container or to the IP of your load-balancer in case your IT is scalled on several nodes.
+- If your URL_HOST and EMAIL_HOST are different you'll also need a A record for your EMAIL_HOST to declare the subdomain/domain that will be associated to your email server/load-balancer.
+- 1 PTR record that will redirect your EMAIL_HOST IP address to your EMAIL_HOST name for reverse DNS lookups.
+- 1 MX record to declare that your EMAIL_HOST is authorised to send email for your domain/subdomain name.
 - 1 TXT record to declare your DKIM public key (the txt record including the public key is provided in the container logs)
-- 1 TXT record to define your server SPF check rules to avoid the usurpation of identity of your email server.
+- 1 TXT record to define your server SPF check rules so that you'll avoid the usurpation of the identity of your email server.
+- 1 TXT record for your DMARC. It requires that your DKIM and SPF are properly configurated. 
 
 comming soon ...
 
 ## Advanced configuration
 comming soon ...
 
-## mailman configuration
-Most of the mailman configuration can be done from however in case you need to change the default behaviour for the future mailing list creation you can edit the mailan configuration by replacing them with using a simple docker volume.
+### mailman configuration
+Most of the mailman configuration can be done from the web interface of each created mailing lists however in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files with using a simple docker volume.
 
 The default mailman configuration for email sending is set to wrap in order to improve the deliverabelity of the email sent through the mailing lists.
 
 
 ## Using with Kubernetes
 
-In order to allows you a fast set up with kubernetes, you can use as a template the YAML files provided in the k8s directory (deployment, service,,ingress) of this repository
+You can use as templates the YAML files provided in the k8s directory (deployment, service,load-balancer, ingress) of this repository for a fast set up with kubernetes.
 
 to be continued...
