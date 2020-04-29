@@ -16,7 +16,7 @@ $ docker pull d3fk/mailman2
 ```
 Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
  
-### Image tag d3fk/mailman2:latest
+### Image tag d3fk/mailman2:latest (comming soon)
 
 The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
