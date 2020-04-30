@@ -114,8 +114,8 @@ $ docker run --rm -d -name mailman \
              -e SSL_FROM_CONTAINER="true" \
              -e SSL_AUTOSIGNED="true" \
              -v apachelogs:/var/log/apache2 \
-             -v $(HOME)/lists:/var/lib/mailman/lists \
-             -v $(HOME)/dkimcert:/etc/exim4/tls.d \
+             -v $(pwd)/lists:/var/lib/mailman/lists \
+             -v $(pwd)/dkimcert:/etc/exim4/tls.d \
              d3fk/mailman2
 ```
 
