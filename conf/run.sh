@@ -22,9 +22,9 @@ mailmancfg='/etc/mailman/mm_cfg.py'
 
 # define the URL pattern for mailman
 if [ $URL_PATTERN != "http" ]; then
-    echo "DEFAULT_URL_PATTERN = 'https://%s/${URL_ROOT//\//\\/}'" >> $mailmancfg
+    echo "DEFAULT_URL_PATTERN = 'https://%s/${URL_ROOT}'" >> $mailmancfg
 else
-    echo "DEFAULT_URL_PATTERN = 'http://%s/${URL_ROOT//\//\\/}'" >> $mailmancfg
+    echo "DEFAULT_URL_PATTERN = 'http://%s/${URL_ROOT}'" >> $mailmancfg
 fi
 
 # enable spf check if requested
