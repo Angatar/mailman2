@@ -122,21 +122,41 @@ $ docker run --rm -d -name mailman \
 ### mailman configuration
 In order to improve the deliverability and security of the mailing lists mailman mailing lists are set by default to be a list members only mailing lists and 
 
-Most of the mailman configuration can be changed from the web interface of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files by using a simple docker volume.
+Most of the mailman configuration can be changed from the web interfaces of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files by using a simple docker or k8s volume.
 
 The default mailman configuration for email sending is set to wrap in order to improve the deliverabelity of the email sent through the mailing lists.
 
 ### Ports to expose
 This container exposes the following ports
-- 80 for HTTP connection to the web interfaces
+- 80  for HTTP connection to the web interfaces
 - 443 for HTTPS access to the web interfaces
-- 25 for SMPT connection
+- 25  for SMPT connection
 - 465 for TLS on connect as explained in [the exim documentation](https://www.exim.org/exim-html-current/doc/html/spec_html/ch-encrypted_smtp_connections_using_tlsssl.html)
 - 587 for standard SMTPS
 
-However you are free to map these container ports to corresponding ports on your server according to your configuration (e.g: do not open 443 if you only goes in http)
+However you are free to map these container ports to the corresponding ports(might also be other ports eg:8080) on your server according to your configuration (e.g: do not open 443 if you only goes with http for the web interfaces)
 
 ### setting https
+There are 3 main way to make use of https with this container
+
+- URL_PATTERN="https" but SSL_FROM_CONTAINER="false" so that the container cannot be directly exposed with https and the SSL cert is managed elsewhere (eg: loadbalancer, reverse-proxt, ingress ....) and the connection between this loadbalancer or whatever and the mailman2 container is made through HTTP.
+- URL_PATTERN="https", SSL_FROM_CONTAINER="true" but SSL_AUTOSIGNED="true"  so that the container could be directly exposed with https but with an error displayed on most browser so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: loadbalancer, reverse-proxt, ingress ....) and the connection between this loadbalancer or whatever and the mailman2 container is made through HTTPS with the autosigned certificate.
+-  URL_PATTERN="https" and SSL_FROM_CONTAINER="true" and SSL_AUTOSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
+
+```sh
+$ docker run --rm -d -name mailman \
+             -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
+             -e URL_HOST=lists.example.com \
+             -e EMAIL_HOST=mails.example.com \
+             -e LIST_ADMIN=youremail@example.com \
+             -e MASTER_PASSWORD="example" \
+             -e URL_PATTERN="https" \
+             -e SSL_FROM_CONTAINER="true" \
+             -e SSL_AUTOSIGNED="false" \
+             -v PATH/customcert.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem \
+             -v PATH/customcertkey.key:/etc/ssl/private/ssl-cert-snakeoil.key \
+             - ...
+```
 
 
 ## Using with Kubernetes
