@@ -9,7 +9,7 @@ ENV EMAIL_HOST lists.example.com
 ENV MASTER_PASSWORD example
 ENV LIST_ADMIN admin@lists.example.com
 ENV LIST_LANGUAGE_CODE en
-ENV ENABLE_SPF "false"
+ENV ENABLE_SPF_CHECK "false"
 ENV URL_ROOT lists/
 ENV URL_PATTERN http 
 ENV SSL_FROM_CONTAINER "false"

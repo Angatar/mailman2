@@ -1,5 +1,5 @@
 # Lightweight (312Mb) useful mailman2 from buster-slim (Angatar> d3fk/mailman2)
-A useful compact mailman2 + exim4 + apache2 container based on Debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
+A useful compact mailman2 + exim4 + apache2 container image based on Debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
 
 Debian buster is the latest Debian release that has packages of the so convenient mailman2. This container image intends to provide a stable and easy way to deploy a mailing lists manager with mailman2 and exim4. 
 
@@ -30,16 +30,16 @@ $ docker pull d3fk/mailman2:stable
 
 ## ENVIRONMENT
 
-- `URL_HOST` - *the subdomain/domain of the web server on which the mailman web interfaces will be made available: used for the URL*
-- `EMAIL_HOST` - *the email host name: the subdomain/domain that will be used by your lists for their email addresses*
-- `MASTER_PASSWORD` - *the master password of the mailing lists - default is set to "example"*
-- `LIST_ADMIN` - *the email address of the lists administrator - used to create the admin account* 
-- `LIST_LANGUAGE_CODE` - *default is set to english with the value: "en"*
-- `URL_ROOT` -  *this env allows to add a root dir to mailman so that it is not obvious for bots. Don't forget the trailling slash or set it as empty string "" if the `URL_ROOT` has to be "`URL_HOST/`". The default value is set to "lists/"*
-- `URL_PATTERN` - *Possible values are "https" and "http" ... for providing web interfaces preferably through https or not. can be usefull to set it to "https" with an "https" ingress or reverse-proxy/load-balancer and letsencrypt certmanager for example - or by using a container embedded certificate with setting the next env var to "true" - default value set to "http"*
-- `SSL_FROM_CONTAINER` - *If you want to go with https on `URL_PATTERN` you might want that the d3fk/mailman2 provides https connection (for other https possibilities see the advanced configuration section)- default value set to "false" as a stringified boolean*
-- `SSL_AUTOSIGNED` - *Only acts if `SSL_FROM_CONTAINER` is set to "true". If `SSL_AUTOSIGNED` is set to "true" an autosigned certificate is generated during deployment - If set to "false" it uses the exisiting certificates in the container without regeneration (allowing you to use your own SSL certificate) - default is set to "false"* 
-- `ENABLE_SPF` - *if you are not behind a load-balancer/reverse-proxy or if you can get the origin IP from your container it might be useful to enable SPF check to avoid identity usurpation of incomming emails. Enabling this option will use about 2.5Mb of additional disk space. This var is waiting for a stringified boolean and the default value is set to "false"*
+- **`URL_HOST`** - the subdomain/domain of the web server on which the mailman web interfaces will be made available: used for the URL
+- **`EMAIL_HOST`** - the email host name: the subdomain/domain that will be used by your lists for their email addresses
+- **`MASTER_PASSWORD`** - the master password of the mailing lists - default is set to "example"
+- **`LIST_ADMIN`** - the email address of the lists administrator - used to create the admin account
+- **`LIST_LANGUAGE_CODE`** - default is set to english with the value: "en"
+- **`URL_ROOT`** -  this env allows to add a root dir to mailman so that it is not obvious for bots. Don't forget the trailling slash or set it as empty string "" if the `URL_ROOT` has to be "`URL_HOST/`". The default value is set to "lists/"
+- **`URL_PATTERN`** - Possible values are "https" and "http" ... for providing web interfaces preferably through https or not. can be usefull to set it to "https" with an "https" ingress or reverse-proxy/load-balancer and letsencrypt certmanager for example - or by using a container embedded certificate with setting the next env var to "true" - default value set to "http"
+- **`SSL_FROM_CONTAINER`** - If you want to go with https on `URL_PATTERN` you might want that the d3fk/mailman2 provides https connection (for other https possibilities see the advanced configuration section)- default value set to "false" as a stringified boolean
+- **`SSL_AUTOSIGNED`** - Only acts if `SSL_FROM_CONTAINER` is set to "true". If `SSL_AUTOSIGNED` is set to "true" an autosigned certificate is generated during deployment - If set to "false" it uses the exisiting certificates in the container without regeneration (allowing you to use your own SSL certificate) - default is set to "false" 
+- **`ENABLE_SPF_CHECK`** - if you are not behind a load-balancer/reverse-proxy or if you can get the origin IP from your container it might be useful to enable SPF check to avoid identity usurpation of incomming emails. Enabling this option will use about 2.5Mb of additional disk space. This var is waiting for a stringified boolean and the default value is set to "false"
 
 
 ## Basic usage
