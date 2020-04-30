@@ -8,7 +8,7 @@ The containers deployed from the d3fk/mailman2 image have TLS enabled and config
 ## Get this image (d3fk/mailman2)
 The best way to get this d3fk/mailman2 image is to pull the prebuilt image from the Docker Hub Registry.
 
-The image is prebuilt from Docker hub with "automated build" option from this repository.
+The image is prebuilt from Docker hub with "automated build" option from the code repository on Github.
 
 image name **d3fk/mailman2**
 ```sh
@@ -21,7 +21,7 @@ Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
 The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
 ### Image tag d3fk/mailman2:stable (comming soon) 
-In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of this repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this code repository on GitHub).
+In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this image code repository on GitHub).
 
 image:tag **d3fk/mailman2:stable**
 ```sh
@@ -62,7 +62,7 @@ Then visit the logs of the mailman container you have created:
 $ docker logs mailman 
 ```
 
-The logs will display the deployment steps of the container and provide you in the end with a valid DKIM public key value and the DKIM txt record that can be added to your DNS records to enable DKIM check for your mailman mailing list server.
+The logs will display the deployment steps of the container and provide you in the end with a **valid DKIM public key** value and the **DKIM txt record** that can be added to your DNS records to enable DKIM check for your mailman mailing list server.
 
 In case you didn't yet configured your DNS for emails and web server, your new mailman2 web server is at least already reachable from http://localhost (welcome text) and if you let the `URL_ROOT` at its default value ("lists/") the mailman admin interface can be reached from (http://localhost/lists/admin/)
 
@@ -77,31 +77,64 @@ Several records on your DNS are required to make mailman, exim4 and the web inte
 - 1 **MX** record to declare that your `EMAIL_HOST` is authorised to send email for your domain/subdomain name.
 - 1 **TXT** record to declare your DKIM public key (the txt record including the public key is provided in the container logs)
 - 1 **TXT** record to define your server SPF check rules so that you'll avoid the usurpation of the identity of your email server.
-- 1 **TXT** record for your DMARC. It requires that your DKIM and SPF records are properly configurated. 
+- 1 **TXT** record for your DMARC. It requires that your DKIM and SPF records are properly configured. 
 
 
 ## Advanced configuration
-The deployed d3fk/mailman2 containers have default configuration set to improve security and email deliverability. If you require a different advanced configuration you can easilly overide the default configuration files with custom config files by using docker/kubernetes volumes.
+The deployed d3fk/mailman2 containers have default a configuration aiming at improving security and email deliverability but may be optimized or changed. If you require a different advanced configuration you can easily overwrite the default configuration files with custom config files by using docker/kubernetes volumes.
 
-### persistent data
-comming soon
+### Data persistence
+Within this container image are defined the following volumes of interest which make create by docker local anonymous volumes for important data:
+- VOLUME /var/log/mailman for the logs of mailman
+- VOLUME /var/log/exim4 for the logs of exim4
+- VOLUME /var/log/apache2 for apache2 logs
+- VOLUME /var/lib/mailman/archives for the mailman
+- VOLUME /var/lib/mailman/lists to create a persistence for the mailman mailing lists created
+- VOLUME /etc/exim4/tls.d to conserve the DKIM certificate over new deployments
+
+
+As they are anonymous local volumes, docker handle where the files are stored by default.
+The data stored in these volumes can be used from other containers (e.g: for log management) by using the `--volumes-from` docker option
+Be aware that in case you use the `docker run --rm` option the volumes will be removed when the container is stoped.
+
+In order to create a better persistence of the data of interest with docker you can use the "named volumes" capabilities.
+In case you whish to control the location of these data on your host with docker you can use the "host volumes" types.
+
+So if you require to keep data persistence on the future mailman container deployments with kubernetes or docker you have to use the volumes capbilities eg: 
+
+```sh
+$ docker create volume apachelogs
+$ docker run --rm -d -name mailman \
+             -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
+             -e URL_HOST=lists.example.com \
+             -e EMAIL_HOST=mails.example.com \
+             -e LIST_ADMIN=youremail@example.com \
+             -e MASTER_PASSWORD="example" \
+             -e URL_PATTERN="https" \
+             -e SSL_FROM_CONTAINER="true" \
+             -e SSL_AUTOSIGNED="true" \
+             -v apachelogs:/var/log/apache2 \
+             -v $(HOME)/lists:/var/lib/mailman/lists \
+             -v $(HOME)/dkimcert:/etc/exim4/tls.d \
+             d3fk/mailman2
+```
 
 ### mailman configuration
-in order to improve the deliverability and security of the mailing lists
+In order to improve the deliverability and security of the mailing lists mailman mailing lists are set by default to be a list members only mailing lists and 
 
-Most of the mailman configuration can be changed from the web interface of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files with using a simple docker volume.
+Most of the mailman configuration can be changed from the web interface of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files by using a simple docker volume.
 
 The default mailman configuration for email sending is set to wrap in order to improve the deliverabelity of the email sent through the mailing lists.
 
-### What are the ports to open
+### Ports to expose
 This container exposes the following ports
 - 80 for HTTP connection to the web interfaces
 - 443 for HTTPS access to the web interfaces
-- 25 for SMPT connexion
-- 465 for TLS first connection as explained in the exim documentation
-- 587 for standard TLS -SMTP
+- 25 for SMPT connection
+- 465 for TLS on connect as explained in [the exim documentation](https://www.exim.org/exim-html-current/doc/html/spec_html/ch-encrypted_smtp_connections_using_tlsssl.html)
+- 587 for standard SMTPS
 
-feel free to map these container ports to corresponding ports on your server according to your configuration (e.g: do not open 443 if you only goes in http)
+However you are free to map these container ports to corresponding ports on your server according to your configuration (e.g: do not open 443 if you only goes in http)
 
 ### setting https
 
