@@ -47,7 +47,7 @@ $ docker pull d3fk/mailman2:stable
 The following `docker run` is just an example, you have to define your own environment variables according to your DNS configuration and your requirements: 
 
 ```sh
-$ docker run --rm -d -name mailman \
+$ docker run --rm -d --name mailman \
              -p 80:80 -p 25:25 -p 465:465 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \  
@@ -104,7 +104,7 @@ So, if you require to keep data persistence on the future mailman container depl
 
 ```sh
 $ docker create volume apachelogs
-$ docker run --rm -d -name mailman \
+$ docker run --rm -d --name mailman \
              -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \
@@ -151,7 +151,7 @@ There are 3 main ways to make use of https with this container:
 So, the docker run should looks like the following:
 
 ```sh
-$ docker run --rm -d -name mailman \
+$ docker run --rm -d --name mailman \
              -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \
