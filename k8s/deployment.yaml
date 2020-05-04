@@ -1,0 +1,85 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mailman
+spec:
+  selector:
+    matchLabels:
+      app: mailman
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+#Can be scaled but some data have to be shared among pods with volumes, like lists, archives and TLS data.
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: mailman
+    spec:
+      hostname: "example"
+      subdomain: "lists"
+      containers:
+      - name: mailman
+        image: d3fk/mailman2
+        env:
+        - name: URL_HOST
+          value: "lists.example.com"
+        - name: EMAIL_HOST
+          value: "mail.example.com"
+        - name: LIST_ADMIN
+          value: "webmaster@example.com"
+        - name: URL_PATTERN
+          value: "https"
+        - name:  MASTER_PASSWORD
+          value: "Example"
+        - name: ENABLE_SPF_CHECK
+          value: "false"
+        - name: URL_ROOT
+          value: "test/" # the mailman listinfo page can be reached from lists.example.com/test/listinfo
+#          value: "" # if empty the mailman user interface can be reached at lists.example.com/listinfo
+        - name: SSL_FROM_CONTAINER
+          value: "true"
+        - name: SSL_SELF_SIGNED
+          value: "true"
+        
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 25 
+        - containerPort: 465 
+        - containerPort: 587 
+        - containerPort: 80
+        - containerPort: 443 
+
+        volumeMounts:
+          - name: nfs-data
+            mountPath: /var/log
+            subPath: log
+          - name: nfs-data
+            mountPath: /var/lib/mailman/lists
+            subPath: lists
+          - name: nfs-data
+            mountPath: /etc/exim4/tls.d
+            subPath: tls.d
+          - name: nfs-data
+            mountPath: /var/lib/mailman/archives
+            subPath: archives
+
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "mail.example.com"
+##Declaring known internal connections to this container will avoid host resolving errors
+#      - ip: "172.16.0.11"
+#        hostnames:
+#        - "apodsvcconnectingtothiscontainer"
+#      - ip: "172.16.0.13"
+#        hostnames:
+#        - "anotherpodsvcconnectingtothiscontainer"
+      volumes:
+        - name: nfs-data
+          nfs:
+            server: ${NFS_SERVER}
+            path: /share/mailman
+
