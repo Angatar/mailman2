@@ -13,7 +13,7 @@ ENV ENABLE_SPF_CHECK "false"
 ENV URL_ROOT lists/
 ENV URL_PATTERN http 
 ENV SSL_FROM_CONTAINER "false"
-ENV SSL_AUTOSIGNED "false"
+ENV SSL_SELFSIGNED "false"
 
 COPY conf/run.sh /
 

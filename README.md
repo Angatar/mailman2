@@ -20,7 +20,7 @@ Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
 
 The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
-### Image tag d3fk/mailman2:stable (comming soon) 
+### Image tag d3fk/mailman2:stable (coming soon) 
 In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this image code repository on GitHub).
 
 image:tag **d3fk/mailman2:stable**
@@ -35,11 +35,11 @@ $ docker pull d3fk/mailman2:stable
 - **`MASTER_PASSWORD`** - the master password of the mailing lists - default is set to "example"
 - **`LIST_ADMIN`** - the email address of the lists administrator - used to create the admin account
 - **`LIST_LANGUAGE_CODE`** - default is set to english with the value: "en"
-- **`URL_ROOT`** -  this env allows to add a root dir to mailman so that it is not obvious for bots. Don't forget the trailling slash or set it as empty string "" if the `URL_ROOT` has to be "`URL_HOST/`". The default value is set to "lists/"
-- **`URL_PATTERN`** - Possible values are "https" and "http" ... for providing web interfaces preferably through https or not. can be usefull to set it to "https" with an "https" ingress or reverse-proxy/load-balancer and letsencrypt certmanager for example - or by using a container embedded certificate with setting the next env var to "true" - default value set to "http"
+- **`URL_ROOT`** -  this env allows to add a root dir to mailman so that it is not obvious for bots. Don't forget the trailing slash or set it as empty string "" if the `URL_ROOT` has to be "`URL_HOST/`". The default value is set to "lists/"
+- **`URL_PATTERN`** - Possible values are "https" and "http" ... for providing web interfaces preferably through https or not. can be useful to set it to "https" with an "https" ingress or reverse-proxy/load-balancer and letsencrypt certmanager for example - or by using a container embedded certificate with setting the next env var to "true" - default value set to "http"
 - **`SSL_FROM_CONTAINER`** - If you want to go with https on `URL_PATTERN` you might want that the d3fk/mailman2 provides https connection (for other https possibilities see the advanced configuration section)- default value set to "false" as a stringified boolean
-- **`SSL_AUTOSIGNED`** - Only acts if `SSL_FROM_CONTAINER` is set to "true". If `SSL_AUTOSIGNED` is set to "true" an autosigned certificate is generated during deployment - If set to "false" it uses the exisiting certificates in the container without regeneration (allowing you to use your own SSL certificate) - default is set to "false" 
-- **`ENABLE_SPF_CHECK`** - if you are not behind a load-balancer/reverse-proxy or if you can get the origin IP from your container it might be useful to enable SPF check to avoid identity usurpation of incomming emails. Enabling this option will use about 2.5Mb of additional disk space. This var is waiting for a stringified boolean and the default value is set to "false"
+- **`SSL_SELFSIGNED`** - Only acts if `SSL_FROM_CONTAINER` is set to "true". If `SSL_SELFSIGNED` is set to "true" a self-signed certificate is generated during deployment - If set to "false" it uses the existing certificates in the container without regeneration (allowing you to use your own SSL certificate) - default is set to "false" 
+- **`ENABLE_SPF_CHECK`** - if you are not behind a load-balancer/reverse-proxy or if you can get the origin IP from your container it might be useful to enable SPF check to avoid identity usurpation of incoming emails. Enabling this option will use about 2.5Mb of additional disk space. This var is waiting for a stringified boolean and the default value is set to "false"
 
 
 ## Basic usage
@@ -71,8 +71,8 @@ The mailing lists cannot be used or created from your localhost since they requi
 
 ## DNS configuration
 Several records on your DNS are required to make mailman, exim4 and the web interfaces work properly (the txt records are optional but good practice).
-- 1 **A** record for your domain or subdomain to declare your web interfaces that will allows to manage your mailing lists. This record has to correpond to your `URL_HOST` and has to point to the IP of the server running this container or to the IP of your load-balancer in case your IT is scalled on several nodes.
-- If your `URL_HOST` and `EMAIL_HOST` are different you'll also need an **A** record for your `EMAIL_HOST` to declare the subdomain/domain that will be associated to your email server/load-balancer/reverse-proxy.
+- 1 **A** record for your domain or subdomain to declare your web interfaces that will allows to manage your mailing lists. This record has to correspond to your `URL_HOST` and has to point to the IP of the server running this container or to the IP of your load-balancer in case your IT is scaled on several nodes.
+- If your `URL_HOST` and `EMAIL_HOST` are different, you'll also need an **A** record for your `EMAIL_HOST` to declare the subdomain/domain that will be associated to your email server/load-balancer/reverse-proxy.
 - 1 **PTR** record that will redirect your `EMAIL_HOST` IP address to your `EMAIL_HOST` name for reverse DNS lookups.
 - 1 **MX** record to declare that your `EMAIL_HOST` is authorised to send email for your domain/subdomain name.
 - 1 **TXT** record to declare your DKIM public key (the txt record including the public key is provided in the container logs)
@@ -94,13 +94,13 @@ Within this container image are defined the following volumes of interest which 
 
 
 As they are anonymous local volumes, docker handle where the files are stored by default.
-The data stored in these volumes can be used from other containers (e.g: for log management) by using the `--volumes-from` docker option
-Be aware that in case you use the `docker run --rm` option the volumes will be removed when the container is stoped.
+The data stored in these volumes can be used from other containers (e.g.: for log management) by using the `--volumes-from` docker option
+Be aware that in case you use the `docker run --rm` option the volumes will be removed when the container is stopped.
 
 In order to create a better persistence of the data of interest with docker you can use the "named volumes" capabilities.
 In case you whish to control the location of these data on your host with docker you can use the "host volumes" types.
 
-So if you require to keep data persistence on the future mailman container deployments with kubernetes or docker you have to use the volumes capbilities eg: 
+So, if you require to keep data persistence on the future mailman container deployments with kubernetes or docker you have to use the volumes capabilities e.g.: 
 
 ```sh
 $ docker create volume apachelogs
@@ -112,7 +112,7 @@ $ docker run --rm -d -name mailman \
              -e MASTER_PASSWORD="example" \
              -e URL_PATTERN="https" \
              -e SSL_FROM_CONTAINER="true" \
-             -e SSL_AUTOSIGNED="true" \
+             -e SSL_SELFSIGNED="true" \
              -v apachelogs:/var/log/apache2 \
              -v $(pwd)/lists:/var/lib/mailman/lists \
              -v $(pwd)/dkimcert:/etc/exim4/tls.d \
@@ -120,11 +120,11 @@ $ docker run --rm -d -name mailman \
 ```
 
 ### mailman configuration
-In order to improve the deliverability and security of the mailing lists mailman mailing lists are set by default to be a list members only mailing lists and 
+In order to improve the deliverability and security of the mailing lists, the mailman mailing lists are set by default to be a list members only mailing lists and 
 
-Most of the mailman configuration can be changed from the web interfaces of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailan configuration by replacing corresponding config files by using a simple docker or k8s volume.
+Most of the mailman configuration can be changed from the web interfaces of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailman configuration by replacing corresponding config files by using a simple docker or k8s volume.
 
-The default mailman configuration for email sending is set to wrap in order to improve the deliverabelity of the email sent through the mailing lists.
+The default mailman configuration for email sending is set to wrap in order to improve the deliverability of the email sent through the mailing lists.
 
 ### Ports to expose
 This container exposes the following ports
@@ -134,14 +134,21 @@ This container exposes the following ports
 - 465 for TLS on connect as explained in [the exim documentation](https://www.exim.org/exim-html-current/doc/html/spec_html/ch-encrypted_smtp_connections_using_tlsssl.html)
 - 587 for standard SMTPS
 
-However you are free to map these container ports to the corresponding ports(might also be other ports eg:8080) on your server according to your configuration (e.g: do not open 443 if you only goes with http for the web interfaces)
+However you are free to map these container ports to the corresponding ports(might be other ports e.g.:8080) on your server according to your configuration (e.g.: do not open 443 if you only goes with http for the web interfaces)
 
-### setting https
-There are 3 main way to make use of https with this container
+### Setting HTTPS
+There are 3 main ways to make use of https with this container:
 
-- URL_PATTERN="https" but SSL_FROM_CONTAINER="false" so that the container cannot be directly exposed with https and the SSL cert is managed elsewhere (eg: loadbalancer, reverse-proxt, ingress ....) and the connection between this loadbalancer or whatever and the mailman2 container is made through HTTP.
-- URL_PATTERN="https", SSL_FROM_CONTAINER="true" but SSL_AUTOSIGNED="true"  so that the container could be directly exposed with https but with an error displayed on most browser so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: loadbalancer, reverse-proxt, ingress ....) and the connection between this loadbalancer or whatever and the mailman2 container is made through HTTPS with the autosigned certificate.
--  URL_PATTERN="https" and SSL_FROM_CONTAINER="true" and SSL_AUTOSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
+- URL_PATTERN="https" but SSL_FROM_CONTAINER="false" so that the container cannot be directly exposed with https and the SSL cert is managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTP.
+- URL_PATTERN="https", SSL_FROM_CONTAINER="true" but SSL_SELFSIGNED="true"  so that the container is managing SSL from the inside with a generated self-signed certificate so that it could directly be exposed with https but with an error displayed on most browsers(due to self-signed cert) so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTPS with the self-signed certificate.
+-  URL_PATTERN="https" and SSL_FROM_CONTAINER="true" and SSL_SELFSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
+```sh
+/etc/ssl/certs/ssl-cert-snakeoil.pem
+/etc/ssl/private/ssl-cert-snakeoil.key
+
+```
+
+So, the docker run should looks like the following:
 
 ```sh
 $ docker run --rm -d -name mailman \
@@ -152,7 +159,7 @@ $ docker run --rm -d -name mailman \
              -e MASTER_PASSWORD="example" \
              -e URL_PATTERN="https" \
              -e SSL_FROM_CONTAINER="true" \
-             -e SSL_AUTOSIGNED="false" \
+             -e SSL_SELFSIGNED="false" \
              -v PATH/customcert.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem \
              -v PATH/customcertkey.key:/etc/ssl/private/ssl-cert-snakeoil.key \
              - ...
