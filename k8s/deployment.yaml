@@ -11,7 +11,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-#Can be scaled but some data have to be shared among pods with volumes, like lists, archives and TLS data.
+# Can be scaled for super active mailing lists but data like lists, archives and DKIM cert have to be shared among pods with volumes.
   replicas: 3 
   template:
     metadata:
@@ -43,14 +43,13 @@ spec:
           value: "true"
         - name: SSL_SELF_SIGNED
           value: "true"
-        
         imagePullPolicy: Always
         ports:
         - containerPort: 25 
         - containerPort: 465 
         - containerPort: 587 
-        - containerPort: 80
         - containerPort: 443 
+#        - containerPort: 80 # not required to open 443 and 80, one of them is sufficient cf ingress 
 
         volumeMounts:
           - name: nfs-data
@@ -70,7 +69,7 @@ spec:
       - ip: "127.0.0.1"
         hostnames:
         - "mail.example.com"
-##Declaring known internal connections to this container will avoid host resolving errors
+##Declaring known internal connections to this container will avoid hosts resolving errors
 #      - ip: "172.16.0.11"
 #        hostnames:
 #        - "apodsvcconnectingtothiscontainer"
@@ -80,6 +79,5 @@ spec:
       volumes:
         - name: nfs-data
           nfs:
-            server: ${NFS_SERVER}
+            server: NFS_SERVER_NAME_OR_IP
             path: /share/mailman
-

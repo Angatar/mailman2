@@ -20,7 +20,7 @@ Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
 
 The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
-### Image tag d3fk/mailman2:stable (coming soon) 
+### Image tag d3fk/mailman2:stable 
 In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this image code repository on GitHub).
 
 image:tag **d3fk/mailman2:stable**
@@ -37,7 +37,7 @@ $ docker pull d3fk/mailman2:stable
 - **`LIST_LANGUAGE_CODE`** - default is set to english with the value: "en"
 - **`URL_ROOT`** -  this env allows to add a root dir to mailman so that it is not obvious for bots. Don't forget the trailing slash or set it as empty string "" if the `URL_ROOT` has to be "`URL_HOST/`". The default value is set to "lists/"
 - **`URL_PATTERN`** - Possible values are "https" and "http" ... for providing web interfaces preferably through https or not. can be useful to set it to "https" with an "https" ingress or reverse-proxy/load-balancer and letsencrypt certmanager for example - or by using a container embedded certificate with setting the next env var to "true" - default value set to "http"
-- **`SSL_FROM_CONTAINER`** - If you want to go with https on `URL_PATTERN` you might want that the d3fk/mailman2 provides https connection (for other https possibilities see the advanced configuration section)- default value set to "false" as a stringified boolean
+- **`SSL_FROM_CONTAINER`** - If you want to go with https on `URL_PATTERN` you might want that the d3fk/mailman2 provides https connection (for other https possibilities see the advanced configuration section).In this case the mod_ssl is enabled and configured and a redirection from 80 to 443 in the container will be set automatically - The default value is set to "false" as a stringified boolean
 - **`SSL_SELFSIGNED`** - Only acts if `SSL_FROM_CONTAINER` is set to "true". If `SSL_SELFSIGNED` is set to "true" a self-signed certificate is generated during deployment - If set to "false" it uses the existing certificates in the container without regeneration (allowing you to use your own SSL certificate) - default is set to "false" 
 - **`ENABLE_SPF_CHECK`** - if you are not behind a load-balancer/reverse-proxy or if you can get the origin IP from your container it might be useful to enable SPF check to avoid identity usurpation of incoming emails. Enabling this option will use about 2.5Mb of additional disk space. This var is waiting for a stringified boolean and the default value is set to "false"
 
@@ -120,11 +120,11 @@ $ docker run --rm -d --name mailman \
 ```
 
 ### mailman configuration
-In order to improve the deliverability and security of the mailing lists, the mailman mailing lists are set by default to be a list members only mailing lists and 
+In order to improve the deliverability and security of the mailing lists, the mailman mailing lists are set by default to be list members only(non-members posts have to be validated by the administrator) and the FROM is munged (in regards to DMARC).
 
-Most of the mailman configuration can be changed from the web interfaces of each created mailing lists. However in case you need to change the default behaviour for the future mailing list creation you simply can edit the mailman configuration by replacing corresponding config files by using a simple docker or k8s volume.
+Some default options are set to be convenient in most of cases (e.g: file attachement enabled, automatic discarding of held messages after 15 days ... )
 
-The default mailman configuration for email sending is set to wrap in order to improve the deliverability of the email sent through the mailing lists.
+Most of all the mailman configuration can be changed from the web interfaces of each created mailing lists. However in case you need to change the default behaviour for all the future mailing list creation you can simply edit the mailman configuration by replacing corresponding config files with a simple docker or k8s volume.
 
 ### Ports to expose
 This container exposes the following ports
@@ -170,4 +170,3 @@ $ docker run --rm -d --name mailman \
 
 You can use as templates the YAML files provided in the k8s directory (deployment, service,load-balancer, ingress) of this repository for a fast set up with kubernetes.
 
-to be continued...

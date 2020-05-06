@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+## annotations have to be adapted according to your ELB service provider
+    kubernetes.io/elb.class: union
+    kubernetes.io/elb.id: XXXXXXXXXXXXX
+
+  labels:
+    app: mailman-elb
+  name: mailman-elb
+spec:
+  loadBalancerIP: XX.XX.XX.XX # IP address of the Load Balancer service in a public network to use.
+  ports:
+  - name: service0
+    nodePort: 30525 # If this parameter is not specified, the system automatically allocates an access port.
+    port: 25 # Cluster virtual IP address access port, which has been registered with the ELB service.
+    protocol: TCP
+    targetPort: 25 # Pod port: corresponds to the container port set in the deployment.
+  - name: service1
+    nodePort: 30465
+    port: 465
+    protocol: TCP
+    targetPort: 465 # Pod port: Container port set in the deployment.
+  - name: service2
+    nodePort: 30587
+    port: 587
+    protocol: TCP
+    targetPort: 587 # the targeted Pod port
+
+  selector:
+    app: mailman
+  type: LoadBalancer
+## depending on your configuration you might want to try 
+#  externalTrafficPolicy: Local
+#  healthCheckNodePort: 30000

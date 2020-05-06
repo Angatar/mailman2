@@ -1,0 +1,23 @@
+apiVersion: v1
+
+kind: Service
+
+metadata: 
+  labels: 
+    app: mailman-nodeport
+  name: mailman-nodeport
+
+spec: 
+  ports: 
+#    - name: http 
+#      nodePort: 30080
+#      port: 80
+#      targetPort: 80
+    - name: https
+      nodePort: 30443
+      port: 443
+      targetPort: 443
+
+  selector: 
+    app: mailman
+  type: NodePort
