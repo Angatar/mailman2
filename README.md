@@ -142,10 +142,10 @@ There are 3 main ways to make use of https with this container:
 - URL_PATTERN="https" but SSL_FROM_CONTAINER="false" so that the container cannot be directly exposed with https and the SSL cert is managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTP.
 - URL_PATTERN="https", SSL_FROM_CONTAINER="true" but SSL_SELFSIGNED="true"  so that the container is managing SSL from the inside with a generated self-signed certificate so that it could directly be exposed with https but with an error displayed on most browsers(due to self-signed cert) so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTPS with the self-signed certificate.
 -  URL_PATTERN="https" and SSL_FROM_CONTAINER="true" and SSL_SELFSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
+
 ```sh
 /etc/ssl/certs/ssl-cert-snakeoil.pem
 /etc/ssl/private/ssl-cert-snakeoil.key
-
 ```
 
 So, the docker run should looks like the following:
