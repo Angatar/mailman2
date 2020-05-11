@@ -144,7 +144,7 @@ cat << EOB
     ***********************************************
 
 EOB
-echo "listsdkim._domainkey.${EMAIL_HOST} IN TXT \"k=rsa; p=$key\""
+echo "listsdkim._domainkey.${EMAIL_HOST} IN TXT \"v=DKIM1; k=rsa; p=$key\""
 echo
 echo
 echo '------------- CONTAINER UP AND RUNNING! -------------'
