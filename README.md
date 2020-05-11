@@ -134,7 +134,7 @@ This container exposes the following ports
 - 465 for TLS on connect as explained in [the exim documentation](https://www.exim.org/exim-html-current/doc/html/spec_html/ch-encrypted_smtp_connections_using_tlsssl.html)
 - 587 for standard SMTPS
 
-However you are free to map these container ports to the corresponding ports(might be other ports e.g.:8080) on your server according to your configuration (e.g.: do not open 443 if you only goes with http for the web interfaces)
+However you are free to map these container ports to the corresponding ports(might be other ports e.g.:8080) on your server according to your configuration (e.g.: do not open 443 if you only go with http for the web interfaces)
 
 ### Setting HTTPS
 There are 3 main ways to make use of https with this container:
