@@ -8,20 +8,24 @@ The containers deployed from the d3fk/mailman2 image have TLS enabled and config
 ## Get this image (d3fk/mailman2)
 The best way to get this d3fk/mailman2 image is to pull the prebuilt image from the Docker Hub Registry.
 
-The image is prebuilt from Docker hub with "automated build" option from the code repository on Github.
+The image is prebuilt from Docker hub with "automated build" option from the [code repository on Github](https://github.com/Angatar/mailman2).
 
 image name **d3fk/mailman2**
 ```sh
 $ docker pull d3fk/mailman2
 ```
 Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
+
+
+[![DockerHub Badge](https://dockeri.co/image/d3fk/mailman2)](https://hub.docker.com/r/d3fk/mailman2)
+
  
 ### Image tag d3fk/mailman2:latest
 
-The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this repo + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
+The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this [image code repository](https://github.com/Angatar/mailman2) + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
 ### Image tag d3fk/mailman2:stable 
-In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this image code repository on GitHub).
+In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this [image code repository on GitHub](https://github.com/Angatar/mailman2)).
 
 image:tag **d3fk/mailman2:stable**
 ```sh
