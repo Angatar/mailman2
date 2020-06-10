@@ -19,8 +19,10 @@ COPY conf/run.sh /
 
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y mailman exim4 apache2 \
+    && apt-get install -y mailman exim4 apache2 curl \
+    && apt-get remove -y --purge --autoremove mariadb-common mysql-common \
     && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && echo "ServerName $URL_HOST" >> /etc/apache2/apache2.conf \
     && chmod +x /run.sh
 
@@ -46,3 +48,5 @@ VOLUME /etc/exim4/tls.d
 EXPOSE 25 465 587 80 443
 
 CMD ["/run.sh"]
+
+HEALTHCHECK CMD curl -f localhost || exit 1

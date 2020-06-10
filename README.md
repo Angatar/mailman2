@@ -1,9 +1,9 @@
-# Lightweight (312Mb) useful mailman2 from buster-slim (Angatar> d3fk/mailman2)
+# Lightweight (242Mb) useful mailman2 from buster-slim (Angatar> d3fk/mailman2)
 A useful compact mailman2 + exim4 + apache2 container image based on Debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
 
 Debian buster is the latest Debian release that has packages of the so convenient mailman2. This container image intends to provide a stable and easy way to deploy a mailing lists manager with mailman2 and exim4. 
 
-The containers deployed from the d3fk/mailman2 image have TLS enabled and configured and are also DKIM ready (generated and configured DKIM keys). It is also ready to make use of https (with generated self-signed or custom certificates).
+The containers deployed from the d3fk/mailman2 image have TLS enabled and configured and are also DKIM ready (generated and configured DKIM keys). It is also ready to make use of https (with generated self-signed or custom certificates). A basic container's web server health check is implemented.
 
 ## Get this image (d3fk/mailman2)
 The best way to get this d3fk/mailman2 image is to pull the prebuilt image from the Docker Hub Registry.
@@ -22,7 +22,7 @@ Docker hub repository: https://hub.docker.com/r/d3fk/mailman2/
  
 ### Image tag d3fk/mailman2:latest
 
-The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this [image code repository](https://github.com/Angatar/mailman2) + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
+The **d3fk/mailman2:latest** image available from the Docker Hub is built automatically (automated build on each change of this [image code repository](https://github.com/Angatar/mailman2) + automated build triggered once per week) so that using the d3fk/mailman2:latest image ensures you to have the latest updated(including security fixes) and functional version available of mailman2, exim4 and apache in a lightweight Debian buster (Debian 10 slim version) till the end of the [LTS of this Debian release](https://wiki.debian.org/DebianReleases).
  
 ### Image tag d3fk/mailman2:stable 
 In case you'd prefer a fixed version of this d3fk/mailman2 container to avoid any possible change in its behaviour, the d3fk/mailman2:stable image is also made available from the Docker hub. This image had a stable behaviour observed in production, so that it was freezed in a release of the code repo and built from the Docker hub by automated build. It won't be changed or rebuilt in the future (the code is available from the "releases" section of this [image code repository on GitHub](https://github.com/Angatar/mailman2)).
@@ -54,9 +54,9 @@ The following `docker run` is just an example, you have to define your own envir
 $ docker run --rm -d --name mailman \
              -p 80:80 -p 25:25 -p 465:465 \
              -e URL_HOST=lists.example.com \
-             -e EMAIL_HOST=mails.example.com \  
+             -e EMAIL_HOST=mails.example.com \
              -e LIST_ADMIN=youremail@example.com \
-             -e MASTER_PASSWORD="example" \ 
+             -e MASTER_PASSWORD="example" \
              d3fk/mailman2
 ```
 
