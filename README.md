@@ -52,6 +52,8 @@ The following `docker run` is just an example, you have to define your own envir
 
 ```sh
 $ docker run --rm -d --name mailman \
+             --add-host mails.example.com:127.0.0.1 \
+             --hostname mails.example.com \
              -p 80:80 -p 25:25 -p 465:465 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \
@@ -80,12 +82,13 @@ Several records on your DNS are required to make mailman, exim4 and the web inte
 - 1 **PTR** record that will redirect your `EMAIL_HOST` IP address to your `EMAIL_HOST` name for reverse DNS lookups.
 - 1 **MX** record to declare that your `EMAIL_HOST` is authorised to send email for your domain/subdomain name.
 - 1 **TXT** record to declare your DKIM public key (the txt record including the public key is provided in the container logs)
-- 1 **TXT** record to define your server SPF check rules so that you'll avoid the usurpation of the identity of your email server.
+- 1 **TXT** record to define your server SPF check rules so that you'll avoid the usurpation of the identity of your email server. The name of the server that sends the emails provided by exim is the primary_hostname that is defined by Exim to the FQDN (set by the --hostname option if used)
 - 1 **TXT** record for your DMARC. It requires that your DKIM and SPF records are properly configured. 
 
 
 ## Advanced configuration
 The deployed d3fk/mailman2 containers have default a configuration aiming at improving security and email deliverability but may be optimized or changed. If you require a different advanced configuration you can easily overwrite the default configuration files with custom config files by using docker/kubernetes volumes.
+
 
 ### Data persistence
 Within this container image are defined the following volumes of interest which make create by docker local anonymous volumes for important data:
@@ -109,6 +112,8 @@ So, if you require to keep data persistence on the future mailman container depl
 ```sh
 $ docker create volume apachelogs
 $ docker run --rm -d --name mailman \
+             --add-host mails.example.com:127.0.0.1 \
+             --hostname mails.example.com \
              -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \
@@ -156,6 +161,8 @@ So, the docker run should looks like the following:
 
 ```sh
 $ docker run --rm -d --name mailman \
+             --add-host mails.example.com:127.0.0.1 \
+             --hostname mails.example.com \
              -p 80:80 -p 443:443 -p 25:25 -p 465:465 -p 587:587 \
              -e URL_HOST=lists.example.com \
              -e EMAIL_HOST=mails.example.com \
@@ -168,6 +175,28 @@ $ docker run --rm -d --name mailman \
              -v PATH/customcertkey.key:/etc/ssl/private/ssl-cert-snakeoil.key \
              - ...
 ```
+### Network considerations
+
+The ```--hostname``` docker runing option is used to define the FQDN of your container but is not compulsory to make work the container properly. If you don't define this option or set your FQDN in an other way, the exim primary_hostname used by exim to sent emails can be retrieved by the following command ```$ docker exec -ti mailman exim -bP primary_hostname ``` and may be useful to define your SPF record.
+
+The use of the ```--add-host``` option to define the EMAIL_HOST to 127.0.0.1 is mandatory to make exim understand that mailman is attempting to send emails from the authorized local hostname.
+In case you are using docker-compose to deploy your d3fk/mailman2 container ```--add-host``` can be replaced by using the corresponding option:
+
+```yaml
+extra_hosts:
+  -${EMAIL_HOST}:127.0.0.1
+
+```
+
+A similar option is also available with Kubernetes:
+
+```yaml
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - ${EMAIL_HOST}
+```
+
 
 
 ## Using with Kubernetes
