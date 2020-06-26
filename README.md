@@ -201,5 +201,5 @@ A similar option is also available with Kubernetes:
 
 ## Using with Kubernetes
 
-You can use as templates the YAML files provided in the k8s directory (deployment, service, load-balancer, ingress) of this repository for a fast set up with kubernetes.
+You can use as templates the YAML files (deployment, service, load-balancer, ingress) provided in the k8s directory of the [code repository](https://github.com/Angatar/mailman2) for a fast set up with kubernetes.
 
