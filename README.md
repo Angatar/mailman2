@@ -177,7 +177,7 @@ $ docker run --rm -d --name mailman \
 ```
 ### Network considerations
 
-The ```--hostname``` docker runing option is used to define the FQDN of your container but is not compulsory to make work the container properly. If you don't define this option or set your FQDN in an other way, the exim primary_hostname used by exim to sent emails can be retrieved by the following command ```$ docker exec -ti mailman exim -bP primary_hostname ``` and may be useful to define your SPF record.
+The ```--hostname``` docker runing option is used to define the FQDN of your container but is not compulsory to make this container work properly. If you don't define this option or set your FQDN in an other way, the exim primary_hostname used by exim to sent emails can be retrieved by the following command ```$ docker exec -ti mailman exim -bP primary_hostname ``` and may be useful to define your SPF record.
 
 The use of the ```--add-host``` option to define the EMAIL_HOST to 127.0.0.1 is mandatory to make exim understand that mailman is attempting to send emails from the authorized local hostname.
 In case you are using docker-compose to deploy your d3fk/mailman2 container ```--add-host``` can be replaced by using the corresponding option:
