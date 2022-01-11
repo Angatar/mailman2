@@ -6,6 +6,8 @@ smtp_banner = lists.example.com
 REMOTE_SMTP_HELO_DATA = lists.example.com
 MAIN_TLS_ENABLE = true
 REMOTE_SMTP_SMARTHOST_HOSTS_REQUIRE_TLS = *
-DAEMON_SMTP_PORTS = 25 : 465 : 587
-TLS_ON_CONNECT_PORTS = 465 : 587
+# DAEMON_SMTP_PORTS and TLS_ON_CONNECT_PORTS var in upper case
+# are no more processed by the default template so we are moving to lowercase
+daemon_smtp_ports = 25 : 465 : 587
+tls_on_connect_ports = 465 : 587
 #CHECK_RCPT_SPF = true
