@@ -110,6 +110,7 @@ echo "setting up cert for TLS..."
 echo "Fixing exim4 permissions..."
 {
         chown -R Debian-exim:Debian-exim /etc/exim4
+        chown -R Debian-exim /var/log/exim4
 }
 
 #build updated exim config file
