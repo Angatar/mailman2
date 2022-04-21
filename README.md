@@ -56,6 +56,7 @@ $ docker run --rm -d --name mailman \
              --hostname mails.example.com \
              -p 80:80 -p 25:25 -p 465:465 \
              -e URL_HOST=lists.example.com \
+             -e URL_PATTERN=http
              -e EMAIL_HOST=mails.example.com \
              -e LIST_ADMIN=youremail@example.com \
              -e MASTER_PASSWORD="example" \
@@ -119,7 +120,6 @@ $ docker run --rm -d --name mailman \
              -e EMAIL_HOST=mails.example.com \
              -e LIST_ADMIN=youremail@example.com \
              -e MASTER_PASSWORD="example" \
-             -e URL_PATTERN="https" \
              -e SSL_FROM_CONTAINER="true" \
              -e SSL_SELFSIGNED="true" \
              -v apachelogs:/var/log/apache2 \
@@ -148,9 +148,9 @@ However you are free to map these container ports to the corresponding ports(mig
 ### Setting HTTPS
 There are 3 main ways to make use of https with this container:
 
-- URL_PATTERN="https" but SSL_FROM_CONTAINER="false" so that the container cannot be directly exposed with https and the SSL cert is managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTP.
-- URL_PATTERN="https", SSL_FROM_CONTAINER="true" but SSL_SELFSIGNED="true"  so that the container is managing SSL from the inside with a generated self-signed certificate so that it could directly be exposed with https but with an error displayed on most browsers(due to self-signed cert) so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTPS with the self-signed certificate.
--  URL_PATTERN="https" and SSL_FROM_CONTAINER="true" and SSL_SELFSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
+- SSL_FROM_CONTAINER="false" means SSL cert is managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTP.
+- SSL_FROM_CONTAINER="true" but SSL_SELFSIGNED="true"  so that the container is managing SSL from the inside with a generated self-signed certificate so that it could directly be exposed with https but with an error displayed on most browsers(due to self-signed cert) so in this case it is better to have a valid SSL certifiacte managed elsewhere (eg: load balancer, reverse-proxy, ingress ....) and the connection between this load balancer or whatever and the mailman2 container is made through HTTPS with the self-signed certificate.
+- SSL_FROM_CONTAINER="true" and SSL_SELFSIGNED="false" this allows you to use a custom certificate by adding the couple pem cert + key through the use of volumes on the following paths:
 
 ```sh
 /etc/ssl/certs/ssl-cert-snakeoil.pem
