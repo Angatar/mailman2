@@ -21,7 +21,7 @@ RUN echo "deb http://deb.debian.org/debian buster-backports main">> /etc/apt/sou
     && apt-get update \
     && apt-get -y upgrade \
     && apt-get install -y mailman exim4 apache2/buster-backports apache2-data/buster-backports apache2-utils/buster-backports curl \
-    && apt-get remove -y --purge --autoremove mariadb-common mysql-common \
+    && apt-get remove -y --purge --autoremove mariadb-common mysql-common bzip2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && echo "ServerName $URL_HOST" >> /etc/apache2/apache2.conf \
