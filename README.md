@@ -1,3 +1,5 @@
+[![Docker Pulls](https://badgen.net/docker/pulls/d3fk/mailman2?icon=docker&label=pulls)](https://hub.docker.com/r/d3fk/mailman2/tags) [![Docker Image Size](https://badgen.net/docker/size/d3fk/mailman2/latest?icon=docker&label=image%20size)](https://hub.docker.com/r/d3fk/mailman2/tags) [![Docker build](https://img.shields.io/docker/cloud/automated/d3fk/mailman2?label=build&logo=docker)](https://hub.docker.com/r/d3fk/mailman2/tags) [![Build status](https://img.shields.io/docker/cloud/build/d3fk/mailman2?label=build%20status&logo=docker)](https://hub.docker.com/r/d3fk/mailman2/tags) [![Docker Stars](https://badgen.net/docker/stars/d3fk/mailman2?icon=docker&label=stars)](https://hub.docker.com/r/d3fk/mailman2) [![Github Stars](https://badgen.net/github/stars/Angatar/mailman2?icon=github&color=green)](https://github.com/Angatar/mailman2) [![Github forks](https://badgen.net/github/forks/Angatar/mailman2?icon=github)](https://github.com/Angatar/mailman2/fork) [![Github open issues](https://badgen.net/github/open-issues/Angatar/mailman2?icon=github)](https://github.com/Angatar/mailman2/issues) [![Github closed issues](https://badgen.net/github/closed-issues/Angatar/mailman2?icon=github)](https://github.com/Angatar/mailman2/issues?q=is%3Aissue+is%3Aclosed) [![GitHub license](https://img.shields.io/github/license/Angatar/mailman2)](https://github.com/Angatar/mailman2/blob/master/LICENSE)
+
 # Lightweight (242Mb) useful mailman2 from buster-slim (Angatar> d3fk/mailman2)
 A useful compact mailman2 + exim4 + apache2 container image based on Debian(10) buster-slim to easily create and manage your mailing lists (including web interfaces).
 
@@ -222,3 +224,7 @@ The logs will display the deployment steps of the container and provide you in t
 
 
 *Please note that even for a test you will need to add the proper DNS records for your domain to make it works properly.*
+
+
+[![GitHub license](https://img.shields.io/github/license/Angatar/mailman2)](https://github.com/Angatar/mailman2/blob/master/LICENSE)
+
