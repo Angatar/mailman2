@@ -208,7 +208,7 @@ You can use as templates the YAML files (deployment, service, load-balancer, ing
 
 ## Using with docker-compose
 
-A `compose.yaml` file and its related `.env` file (optional) for the environment variables, are provided in the docker-compose directory of the [code repository] to serve as template for fast set up with docker-compose. In case you decide to make use of the `.env` file it has to be created in the same directory than the `compose.yaml` file to be used by docker-compose during your deployments.
+A `compose.yaml` file and its related `.env` file (optional) for the environment variables, are provided in the docker-compose directory of the [code repository] to serve as templates for fast set up with docker-compose. In case you decide to make use of the `.env` file, it has to be created in the same directory than the `compose.yaml` file to be used by `docker-compose` during your deployments.
 
 You can complete the compose.yaml and .env with the environment variables listed in the [ENVIRONMENT section](https://github.com/Angatar/mailman2#environment).
 
