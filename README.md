@@ -203,3 +203,22 @@ A similar option is also available with Kubernetes:
 
 You can use as templates the YAML files (deployment, service, load-balancer, ingress) provided in the k8s directory of the [code repository](https://github.com/Angatar/mailman2) for a fast set up with kubernetes.
 
+
+## Using with docker-compose
+
+A ```compose.yaml```file and its related ``.env``` file (optional) for the environment variables, are provided in the docker-compose directory of the [code repository](https://github.com/Angatar/mailman2) to serve as template for fast set up with docker-compose. In case you decide to make use of the ```.env``` file it has to be created in the same directory than the ```compose.yaml``` file to be used by docker-compose during your deployments.
+
+You can complete the compose.yaml and .env with the environment variables listed in the [ENVIRONMENT section](https://github.com/Angatar/mailman2#environment)
+
+Then simply run your compose file with ```docker-compose up -d``` and visit your $URL_HOST/$URL_ROOT/admin to start managing your mailing lists (indicate the mapped port after the URL_HOST if required).
+
+Don't forget to visit the logs of the mailman container you have created:
+
+```
+$ docker logs mailman 
+```
+
+The logs will display the deployment steps of the container and provide you in the end with a valid DKIM public key value and the DKIM txt record that can be added to your DNS records to enable DKIM check for your mailman mailing list server.
+
+
+*Please note that even for a test you will need to add the proper DNS records for your domain to make it works properly.*

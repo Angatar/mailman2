@@ -1,0 +1,19 @@
+services:
+  mailman:
+    image: d3fk/mailman2
+    container_name: mailman
+    hostname: ${EMAIL_HOST}
+    restart: always
+    ports:
+      - "80:80"
+      - "25:25"
+      - "465:465"
+    environment:
+      EMAIL_HOST: ${EMAIL_HOST}
+      URL_HOST: ${URL_HOST}
+      LIST_ADMIN: ${LIST_ADMIN}
+      MASTER_PASSWORD: ${MASTER_PASSWORD}
+      URL_PATTERN: ${URL_PATTERN}
+      URL_ROOT: ${URL_ROOT}
+    extra_hosts:
+      - ${EMAIL_HOST}:127.0.0.1
