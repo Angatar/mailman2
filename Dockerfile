@@ -42,6 +42,7 @@ COPY conf/aliases /etc/aliases
 VOLUME /var/log/mailman
 VOLUME /var/log/exim4
 VOLUME /var/log/apache2
+VOLUME /var/spool
 VOLUME /var/lib/mailman/archives
 VOLUME /var/lib/mailman/lists
 VOLUME /etc/exim4/tls.d
