@@ -148,7 +148,22 @@ EOB
 echo "listsdkim._domainkey.${EMAIL_HOST} IN TXT \"v=DKIM1; k=rsa; p=$key\""
 echo
 echo
-echo '------------- CONTAINER UP AND RUNNING! -------------'
 
-# Starting apache2 in foreground 
-apachectl -DFOREGROUND -k start
+# defining stop actions in case of SIGTERM or SIGINT
+gracefull_stop() {
+  echo "The container was asked to terminate its processes gracefully..."
+  /etc/init.d/mailman stop
+  /etc/init.d/exim4 stop
+  apachectl -k stop
+  echo "Apache2 server is now stopped."
+  echo "Asking for exit with code 143 (SIGTERM)..."
+  exit 143
+}
+
+# trapping SIGTERM and SIGINT termination signals and trigger actions
+trap 'gracefull_stop' SIGTERM SIGINT
+
+echo '------------- CONTAINER UP AND RUNNING! -------------'
+# Starting apache2 in foreground & wait
+apachectl -DFOREGROUND -k start & wait ${!}
+
