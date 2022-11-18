@@ -150,7 +150,7 @@ echo
 echo
 
 # defining stop actions in case of SIGTERM or SIGINT
-gracefull_stop() {
+graceful_stop() {
   echo "The container was asked to terminate its processes gracefully..."
   /etc/init.d/mailman stop
   /etc/init.d/exim4 stop
@@ -161,7 +161,7 @@ gracefull_stop() {
 }
 
 # trapping SIGTERM and SIGINT termination signals and trigger actions
-trap 'gracefull_stop' SIGTERM SIGINT
+trap 'graceful_stop' SIGTERM SIGINT
 
 echo '------------- CONTAINER UP AND RUNNING! -------------'
 # Starting apache2 in foreground & wait
