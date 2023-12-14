@@ -1,5 +1,7 @@
 FROM debian:buster-slim
-MAINTAINER d3fk 
+LABEL org.opencontainers.image.authors="d3fk::Angatar"
+LABEL org.opencontainers.image.source="https://github.com/Angatar/mailman2.git"
+LABEL org.opencontainers.image.url="https://github.com/Angatar/mailman2"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
@@ -11,7 +13,7 @@ ENV LIST_ADMIN admin@lists.example.com
 ENV LIST_LANGUAGE_CODE en
 ENV ENABLE_SPF_CHECK "false"
 ENV URL_ROOT lists/
-ENV URL_PATTERN http 
+ENV URL_PATTERN http
 ENV SSL_FROM_CONTAINER "false"
 ENV SSL_SELFSIGNED "false"
 
