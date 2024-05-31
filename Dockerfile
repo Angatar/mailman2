@@ -26,6 +26,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && echo "ServerName $URL_HOST" >> /etc/apache2/apache2.conf \
+    && echo "tls_require_ciphers = NORMAL:-VERS-SSL3.0:-VERS-TLS1.0:-VERS-TLS1.1" > /etc/exim4/conf.d/main/00_exim4-config_tlsversions \
     && chmod +x /run.sh
 
 COPY conf/00_local_macros /etc/exim4/conf.d/main/
